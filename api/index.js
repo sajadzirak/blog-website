@@ -5,10 +5,11 @@ const User = require("./models/User");
 const bcrypt = require("bcrypt");
 const app = express();
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 
 const secret = "laoetunc232nxiutea545gkjl"
 
-app.use(cors({credentials: true, origin: 'http://localhost:5173'}), express.json());
+app.use(cors({credentials: true, origin: 'http://localhost:5173'}), express.json(), cookieParser());
 
 mongoose.connect("mongodb://127.0.0.1:27017/mernblog");
 
@@ -39,7 +40,13 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/profile", (req, res) => {
+  const {token} = request.cookies;
+  jwt.verify(token, secret, {}, (err, info) => {
+    if(err) throw err
+    res.json(info)
+  })
+})
+
 app.listen(4000);
 
-// // mongodb+srv://blog:<qMCako2fw0BB00D3>@cluster0.iravwc4.mongodb.net/?retryWrites=true&w=majority
-// // nutgdQ7r8NmM0bBu
