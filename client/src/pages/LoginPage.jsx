@@ -16,6 +16,8 @@ function LoginPage() {
     })
     if (response.ok) {
       navigate("/")
+    } else {
+      alert("You can not login, something is wrong")
     }
   }
 
