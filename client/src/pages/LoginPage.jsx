@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {UserContext} from "../UserContext"
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const {setUserInfo} = useContext(UserContext)
   const navigate = useNavigate()
 
   async function login(e) {
@@ -15,7 +17,10 @@ function LoginPage() {
       credentials: 'include',
     })
     if (response.ok) {
-      navigate("/")
+      response.json().then(userInfo => {
+        setUserInfo(userInfo)
+        navigate("/")
+      })
     } else {
       alert("You can not login, something is wrong")
     }
