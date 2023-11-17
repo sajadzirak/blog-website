@@ -1,29 +1,23 @@
-function Post() {
+import {formatISO9075} from "date-fns"
+
+function Post({ title, summary, cover, content, createdAt, author }) {
   return (
-      <div className="post">
-        <div className="image">
-          <img
-            src="https://techcrunch.com/wp-content/uploads/2023/10/Soundboks.jpg?w=990&crop=1"
-            alt=""
-          />
-        </div>
-        <div className="texts">
-          <h2>
-            Soundboks is scaling high-volume, high-energy speakers across
-            borders and cultures
-          </h2>
-          <p className="info">
-            <a className="author">Matt Burns</a>
-            <time>2023-01-06 16:45</time>
-          </p>
-          <p className="summary">
-            norway-based Soundboks just released its latest $1,000 Bluetooth
-            speaker. Now in its fourth generation, the latest Soundboks speaker
-            is just like the older models: It’s a large, unabashed black box
-            designed to withstand a rowdy, off-the-grid weekend of music.{" "}
-          </p>
-        </div>
+    <div className="post">
+      <div className="image">
+        <img
+          src={"http://localhost:4000/"+cover}
+          alt=""
+        />
       </div>
+      <div className="texts">
+        <h2>{title}</h2>
+        <p className="info">
+          <a className="author">{author.username}</a>
+          <time>{formatISO9075(new Date(createdAt))}</time>
+        </p>
+        <p className="summary">{summary}</p>
+      </div>
+    </div>
   );
 }
 

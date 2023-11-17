@@ -16,8 +16,10 @@ const secret = "laoetunc232nxiutea545gkjl";
 app.use(
   cors({ credentials: true, origin: "http://localhost:5173" }),
   express.json(),
-  cookieParser()
+  cookieParser(),
 );
+
+app.use('/uploads', express.static(__dirname+"/uploads"))
 
 mongoose.connect("mongodb://127.0.0.1:27017/mernblog");
 
@@ -72,15 +74,27 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  const { title, summary, content } = req.body;
-  const postDoc = await Post.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) throw err;
+    const { title, summary, content } = req.body;
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+    res.json(postDoc);
   });
+});
 
-  res.json(postDoc);
+app.get("/post", async (req, res) => {
+  const posts = await Post.find()
+    .populate("author", ["username"])
+    .sort({ createdAt: -1 })
+    .limit(20);
+  res.json(posts);
 });
 
 app.listen(4000);
