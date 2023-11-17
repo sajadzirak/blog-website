@@ -33,7 +33,7 @@ function Header() {
       <nav>
         {username ? (
           <>
-            <Link to="/create">Create new article</Link>
+            <Link to="/create">Create new post</Link>
             <a onClick={logout}>Logout</a>
           </>
         ) : (
