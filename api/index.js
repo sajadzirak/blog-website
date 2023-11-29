@@ -16,10 +16,10 @@ const secret = "laoetunc232nxiutea545gkjl";
 app.use(
   cors({ credentials: true, origin: "http://localhost:5173" }),
   express.json(),
-  cookieParser(),
+  cookieParser()
 );
 
-app.use('/uploads', express.static(__dirname+"/uploads"))
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect("mongodb://127.0.0.1:27017/mernblog");
 
@@ -95,6 +95,12 @@ app.get("/post", async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(20);
   res.json(posts);
+});
+
+app.get("/post/:id", async (req, res) => {
+  const { id } = req.params;
+  const postDoc = await Post.findById(id).populate("author", ["username"]);
+  res.json(postDoc);
 });
 
 app.listen(4000);
